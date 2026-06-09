@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from .database import get_db
-from .models import User
-from .schemas import LoginRequest, TokenResponse
-from .security import verify_password, create_access_token
+from database import get_db
+from models import User
+from schemas import LoginRequest, LoginResponse
+from security import verify_password
 
 router = APIRouter(
     prefix="/auth",
@@ -12,7 +12,7 @@ router = APIRouter(
 )
 
 
-@router.post("/login", response_model=TokenResponse)
+@router.post("/login", response_model=LoginResponse)
 def login(request: LoginRequest, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.email == request.email).first()
 
@@ -28,14 +28,9 @@ def login(request: LoginRequest, db: Session = Depends(get_db)):
             detail="Invalid email or password"
         )
 
-    token = create_access_token(
-        data={
-            "sub": user.email,
-            "user_id": user.id
-        }
-    )
-
     return {
-        "access_token": token,
-        "token_type": "bearer"
+        "message": "Login successful",
+        "user_id": user.id,
+        "name": user.name,
+        "email": user.email
     }
