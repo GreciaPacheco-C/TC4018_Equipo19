@@ -2,30 +2,36 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../services/api";
 
-function Login() {
+function Signup() {
   const navigate = useNavigate();
 
-  const [email, setEmail] = useState("test.user@example.com");
-  const [password, setPassword] = useState("Test1234");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleLogin = async (event) => {
+  const handleSignup = async (event) => {
     event.preventDefault();
     setMessage("");
     setLoading(true);
 
     try {
-      const response = await api.post("/auth/login", {
+      await api.post("/auth/signup", {
+        name,
         email,
         password,
       });
 
-      localStorage.setItem("user", JSON.stringify(response.data));
-      navigate("/dashboard");
+      setMessage("Account created successfully. Redirecting to login...");
+
+      setTimeout(() => {
+        navigate("/");
+      }, 1200);
     } catch (error) {
       if (error.response) {
-        setMessage(error.response.data.detail || "Invalid email or password");
+        setMessage(error.response.data.detail || "Could not create account");
       } else {
         setMessage("Could not connect to backend");
       }
@@ -42,28 +48,39 @@ function Login() {
           <h1>BioAge Clinical AI</h1>
         </div>
 
-        <h2>Secure access for clinical analysis</h2>
+        <h2>Create a professional account</h2>
 
         <p>
-          Platform for biological age assessment and disease risk prediction
-          using DNA methylation data.
+          Register to access biological age assessment and disease risk
+          prediction tools for clinical and biomedical research workflows.
         </p>
 
         <div className="feature-list">
-          <div>✓ Secure professional access</div>
-          <div>✓ Patient-centered risk analysis</div>
-          <div>✓ AI-powered methylation insights</div>
+          <div>✓ Designed for healthcare professionals</div>
+          <div>✓ Supports DNA methylation data analysis</div>
+          <div>✓ Built for secure patient-related insights</div>
         </div>
       </div>
 
       <div className="auth-right">
         <div className="auth-card">
-          <span className="tag">Healthcare Platform</span>
+          <span className="tag">New Account</span>
 
-          <h2>Welcome back</h2>
-          <p className="subtitle">Sign in to continue to your dashboard.</p>
+          <h2>Sign Up</h2>
+          <p className="subtitle">Create your account to start using the platform.</p>
 
-          <form onSubmit={handleLogin}>
+          <form onSubmit={handleSignup}>
+            <div className="form-group">
+              <label>Full name</label>
+              <input
+                type="text"
+                value={name}
+                placeholder="Dra. Ana Martínez"
+                onChange={(event) => setName(event.target.value)}
+                required
+              />
+            </div>
+
             <div className="form-group">
               <label>Email address</label>
               <input
@@ -80,22 +97,21 @@ function Login() {
               <input
                 type="password"
                 value={password}
-                placeholder="Enter your password"
+                placeholder="Create a password"
                 onChange={(event) => setPassword(event.target.value)}
                 required
               />
             </div>
 
             <button className="primary-button" type="submit" disabled={loading}>
-              {loading ? "Signing in..." : "Sign In"}
+              {loading ? "Creating account..." : "Create Account"}
             </button>
           </form>
 
-          {message && <p className="error-message">{message}</p>}
+          {message && <p className="info-message">{message}</p>}
 
           <p className="auth-footer">
-            Don&apos;t have an account?{" "}
-            <Link to="/signup">Create account</Link>
+            Already have an account? <Link to="/">Sign in</Link>
           </p>
         </div>
       </div>
@@ -103,4 +119,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default Signup;
