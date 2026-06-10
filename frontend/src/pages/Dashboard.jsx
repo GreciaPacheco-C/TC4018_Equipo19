@@ -1,4 +1,6 @@
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import api from "../services/api";
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -7,6 +9,44 @@ function Dashboard() {
   const handleLogout = () => {
     localStorage.removeItem("user");
     navigate("/");
+  };
+
+  const handleCSVUpload = async (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (!file.name.endsWith(".csv")) {
+      setUploadMessage("❌ Please upload a CSV file");
+      setTimeout(() => setUploadMessage(""), 3000);
+      return;
+    }
+
+    setUploadingFile(true);
+    setUploadMessage("");
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const response = await api.post("/upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      setUploadMessage(`✅ File uploaded successfully: ${file.name}`);
+      setTimeout(() => setUploadMessage(""), 3000);
+    } catch (error) {
+      console.error("Upload error:", error);
+      setUploadMessage(
+        `❌ Error uploading file: ${error.response?.data?.detail || error.message}`
+      );
+      setTimeout(() => setUploadMessage(""), 3000);
+    } finally {
+      setUploadingFile(false);
+      // Reset file input
+      event.target.value = "";
+    }
   };
 
   if (!user) {
@@ -60,6 +100,35 @@ function Dashboard() {
           </div>
         </header>
 
+        <section className="upload-section">
+          <div className="upload-card">
+            <h2>Upload Data for Inference</h2>
+            <p>Upload a CSV file containing patient data to run inference</p>
+            
+            <label htmlFor="csv-input" className="upload-button-label">
+              <input
+                id="csv-input"
+                type="file"
+                accept=".csv"
+                onChange={handleCSVUpload}
+                disabled={uploadingFile}
+                style={{ display: "none" }}
+              />
+              <button 
+                className="upload-button primary-button" 
+                disabled={uploadingFile}
+                onClick={() => document.getElementById("csv-input").click()}
+              >
+                {uploadingFile ? "Uploading..." : "📁 Load CSV"}
+              </button>
+            </label>
+
+            {uploadMessage && (
+              <p className="upload-message">{uploadMessage}</p>
+            )}
+          </div>
+        </section>
+
         <section className="summary-grid">
           <div className="summary-card">
             <span>Patients analyzed</span>
@@ -70,7 +139,7 @@ function Dashboard() {
           <div className="summary-card">
             <span>Files uploaded</span>
             <h3>0</h3>
-            <p>Upload module coming next</p>
+            <p>Upload module under construction</p>
           </div>
 
           <div className="summary-card">
