@@ -5,6 +5,8 @@ import api from "../services/api";
 function Dashboard() {
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem("user"));
+  const [uploadingFile, setUploadingFile] = useState(false);
+  const [uploadMessage, setUploadMessage] = useState("");
 
   const handleLogout = () => {
     localStorage.removeItem("user");
