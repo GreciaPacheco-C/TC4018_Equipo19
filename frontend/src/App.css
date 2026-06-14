@@ -413,6 +413,87 @@
   color: #667eea;
 }
 
+.upload-preview {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 2px solid #f0f4ff;
+}
+
+.upload-preview h3 {
+  margin: 0 0 16px 0;
+  color: #333;
+  font-size: 18px;
+}
+
+.preview-info {
+  background: #f8f9fa;
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.preview-info p {
+  margin: 8px 0;
+  color: #666;
+  font-size: 14px;
+}
+
+.preview-info strong {
+  color: #333;
+}
+
+.data-table {
+  margin-top: 20px;
+}
+
+.data-table h4 {
+  margin: 0 0 12px 0;
+  color: #333;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.data-table table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.data-table thead {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.data-table th {
+  padding: 12px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 13px;
+  text-transform: capitalize;
+}
+
+.data-table td {
+  padding: 12px;
+  border-bottom: 1px solid #f0f4ff;
+  font-size: 13px;
+  color: #666;
+  word-break: break-word;
+  max-width: 200px;
+}
+
+.data-table tbody tr:hover {
+  background: #f8f9fa;
+}
+
+.data-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
 /* Summary Grid */
 .summary-grid {
   display: grid;
