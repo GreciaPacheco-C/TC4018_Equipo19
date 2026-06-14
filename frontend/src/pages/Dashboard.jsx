@@ -7,6 +7,7 @@ function Dashboard() {
   const user = JSON.parse(localStorage.getItem("user"));
   const [uploadingFile, setUploadingFile] = useState(false);
   const [uploadMessage, setUploadMessage] = useState("");
+  const [uploadedData, setUploadedData] = useState(null);
 
   const handleLogout = () => {
     localStorage.removeItem("user");
@@ -25,6 +26,7 @@ function Dashboard() {
 
     setUploadingFile(true);
     setUploadMessage("");
+    setUploadedData(null);
 
     try {
       const formData = new FormData();
@@ -36,14 +38,17 @@ function Dashboard() {
         },
       });
 
+      // Almacenar los datos cargados
+      setUploadedData(response.data);
       setUploadMessage(`✅ File uploaded successfully: ${file.name}`);
-      setTimeout(() => setUploadMessage(""), 3000);
+      
+      // Mantener el mensaje visible por más tiempo
+      setTimeout(() => setUploadMessage(""), 5000);
     } catch (error) {
       console.error("Upload error:", error);
-      setUploadMessage(
-        `❌ Error uploading file: ${error.response?.data?.detail || error.message}`
-      );
-      setTimeout(() => setUploadMessage(""), 3000);
+      const errorDetail = error.response?.data?.detail || error.message;
+      setUploadMessage(`❌ Error uploading file: ${errorDetail}`);
+      setTimeout(() => setUploadMessage(""), 5000);
     } finally {
       setUploadingFile(false);
       // Reset file input
@@ -127,6 +132,41 @@ function Dashboard() {
 
             {uploadMessage && (
               <p className="upload-message">{uploadMessage}</p>
+            )}
+
+            {uploadedData && (
+              <div className="upload-preview">
+                <h3>📊 File Information</h3>
+                <div className="preview-info">
+                  <p><strong>File:</strong> {uploadedData.filename}</p>
+                  <p><strong>Rows:</strong> {uploadedData.rows_count}</p>
+                  <p><strong>Columns:</strong> {uploadedData.columns.join(", ")}</p>
+                </div>
+                
+                {uploadedData.data && uploadedData.data.length > 0 && (
+                  <div className="data-table">
+                    <h4>Preview (First 5 rows)</h4>
+                    <table>
+                      <thead>
+                        <tr>
+                          {uploadedData.columns.map((col) => (
+                            <th key={col}>{col}</th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {uploadedData.data.map((row, idx) => (
+                          <tr key={idx}>
+                            {uploadedData.columns.map((col) => (
+                              <td key={`${idx}-${col}`}>{row[col] || "-"}</td>
+                            ))}
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
             )}
           </div>
         </section>
