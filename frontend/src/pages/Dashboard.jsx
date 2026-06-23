@@ -8,6 +8,10 @@ function Dashboard() {
   const [uploadingFile, setUploadingFile] = useState(false);
   const [uploadMessage, setUploadMessage] = useState("");
   const [uploadedData, setUploadedData] = useState(null);
+  const [sessionStats, setSessionStats] = useState({
+    filesUploaded: 0,
+    predictionsGenerated: 0,
+  });
 
   const handleLogout = () => {
     localStorage.removeItem("user");
@@ -39,6 +43,11 @@ function Dashboard() {
       });
 
       setUploadedData(response.data);
+      setSessionStats((currentStats) => ({
+        filesUploaded: currentStats.filesUploaded + 1,
+        predictionsGenerated:
+          currentStats.predictionsGenerated + (response.data.predictions?.length || 0),
+      }));
       setUploadMessage("File processed successfully");
       setTimeout(() => setUploadMessage(""), 5000);
     } catch (error) {
@@ -175,13 +184,13 @@ function Dashboard() {
 
           <div className="summary-card">
             <span>Files uploaded</span>
-            <h3>{uploadedData ? 1 : 0}</h3>
+            <h3>{sessionStats.filesUploaded}</h3>
             <p>In this session</p>
           </div>
 
           <div className="summary-card">
             <span>Predictions generated</span>
-            <h3>{uploadedData?.predictions?.length || 0}</h3>
+            <h3>{sessionStats.predictionsGenerated}</h3>
             <p>Risk and biological-age pairs</p>
           </div>
         </section>
