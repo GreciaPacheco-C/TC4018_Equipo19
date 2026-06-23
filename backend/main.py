@@ -4,6 +4,7 @@ import csv
 import io
 
 from auth import router as auth_router
+from prediction import ModelCompatibilityError, predict_rows
 
 app = FastAPI(
     title="Age Assessment & Disease Risk Prediction API",
@@ -76,13 +77,27 @@ async def upload_csv(file: UploadFile = File(...)):
         # Aquí puedes procesar los datos o enviarlos al modelo de IA
         # Por ahora, simplemente retornamos información sobre el archivo
         
+        try:
+            required_features, predictions = predict_rows(rows)
+        except ValueError as error:
+            raise HTTPException(status_code=422, detail=str(error))
+        except ModelCompatibilityError as error:
+            raise HTTPException(status_code=503, detail=str(error))
+
         return {
             "status": "success",
             "message": f"Archivo '{file.filename}' cargado exitosamente",
             "filename": file.filename,
             "rows_count": len(rows),
             "columns": list(csv_reader.fieldnames),
-            "data": rows[:5]  # Primeras 5 filas como preview
+            "data": rows[:5],
+            "required_features": required_features,
+            "predictions": predictions,
+            "model_scope_notice": (
+                "Methylation classifier active: Alzheimer/control risk is calculated from age, "
+                "gender, sample_type, and the selected CpG methylation features. Biological age "
+                "is calculated with the paired methylation regression artifact."
+            )
         }
     
     except HTTPException:

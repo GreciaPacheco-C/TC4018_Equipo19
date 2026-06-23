@@ -19,7 +19,7 @@ function Dashboard() {
     if (!file) return;
 
     if (!file.name.endsWith(".csv")) {
-      setUploadMessage("❌ Please upload a CSV file");
+      setUploadMessage("Please upload a CSV file");
       setTimeout(() => setUploadMessage(""), 3000);
       return;
     }
@@ -38,20 +38,16 @@ function Dashboard() {
         },
       });
 
-      // Almacenar los datos cargados
       setUploadedData(response.data);
-      setUploadMessage(`✅ File uploaded successfully: ${file.name}`);
-      
-      // Mantener el mensaje visible por más tiempo
+      setUploadMessage("File processed successfully");
       setTimeout(() => setUploadMessage(""), 5000);
     } catch (error) {
       console.error("Upload error:", error);
       const errorDetail = error.response?.data?.detail || error.message;
-      setUploadMessage(`❌ Error uploading file: ${errorDetail}`);
+      setUploadMessage(`Error uploading file: ${errorDetail}`);
       setTimeout(() => setUploadMessage(""), 5000);
     } finally {
       setUploadingFile(false);
-      // Reset file input
       event.target.value = "";
     }
   };
@@ -111,7 +107,7 @@ function Dashboard() {
           <div className="upload-card">
             <h2>Upload Data for Inference</h2>
             <p>Upload a CSV file containing patient data to run inference</p>
-            
+
             <label htmlFor="csv-input" className="upload-button-label">
               <input
                 id="csv-input"
@@ -121,51 +117,50 @@ function Dashboard() {
                 disabled={uploadingFile}
                 style={{ display: "none" }}
               />
-              <button 
-                className="upload-button primary-button" 
+              <button
+                className="upload-button primary-button"
                 disabled={uploadingFile}
                 onClick={() => document.getElementById("csv-input").click()}
               >
-                {uploadingFile ? "Uploading..." : "📁 Load CSV"}
+                {uploadingFile ? "Uploading..." : "Load CSV"}
               </button>
             </label>
 
-            {uploadMessage && (
-              <p className="upload-message">{uploadMessage}</p>
-            )}
+            {uploadMessage && <p className="upload-message">{uploadMessage}</p>}
 
-            {uploadedData && (
+            {uploadedData?.predictions?.length > 0 && (
               <div className="upload-preview">
-                <h3>📊 File Information</h3>
-                <div className="preview-info">
-                  <p><strong>File:</strong> {uploadedData.filename}</p>
-                  <p><strong>Rows:</strong> {uploadedData.rows_count}</p>
-                  <p><strong>Columns:</strong> {uploadedData.columns.join(", ")}</p>
-                </div>
-                
-                {uploadedData.data && uploadedData.data.length > 0 && (
-                  <div className="data-table">
-                    <h4>Preview (First 5 rows)</h4>
-                    <table>
+                <div className="prediction-results">
+                  <h3>Prediction results</h3>
+                  <div className="prediction-table">
+                    <table className="prediction-results-table">
                       <thead>
                         <tr>
-                          {uploadedData.columns.map((col) => (
-                            <th key={col}>{col}</th>
-                          ))}
+                          <th>Risk</th>
+                          <th>Predicted disease</th>
+                          <th>Biological age</th>
+                          <th>Biological group</th>
+                          <th>Age acceleration</th>
                         </tr>
                       </thead>
                       <tbody>
-                        {uploadedData.data.map((row, idx) => (
-                          <tr key={idx}>
-                            {uploadedData.columns.map((col) => (
-                              <td key={`${idx}-${col}`}>{row[col] || "-"}</td>
-                            ))}
+                        {uploadedData.predictions.map((prediction) => (
+                          <tr key={prediction.row}>
+                            <td className={`risk-cell risk-cell-${prediction.alzheimer_risk_level}`}>
+                              <span className={`risk-badge risk-${prediction.alzheimer_risk_level}`}>
+                                {prediction.alzheimer_risk_percentage}% · {prediction.alzheimer_risk_level}
+                              </span>
+                            </td>
+                            <td>{prediction.predicted_disease}</td>
+                            <td>{prediction.biological_age ?? "N/A"}</td>
+                            <td>{prediction.biological_age_range}</td>
+                            <td>{prediction.age_acceleration ?? "N/A"}</td>
                           </tr>
                         ))}
                       </tbody>
                     </table>
                   </div>
-                )}
+                </div>
               </div>
             )}
           </div>
@@ -174,24 +169,22 @@ function Dashboard() {
         <section className="summary-grid">
           <div className="summary-card">
             <span>Patients analyzed</span>
-            <h3>0</h3>
-            <p>Feature coming next</p>
+            <h3>{uploadedData?.predictions?.length || 0}</h3>
+            <p>In the latest uploaded file</p>
           </div>
 
           <div className="summary-card">
             <span>Files uploaded</span>
-            <h3>0</h3>
-            <p>Upload module under construction</p>
+            <h3>{uploadedData ? 1 : 0}</h3>
+            <p>In this session</p>
           </div>
 
           <div className="summary-card">
             <span>Predictions generated</span>
-            <h3>0</h3>
-            <p>Feature coming next</p>
+            <h3>{uploadedData?.predictions?.length || 0}</h3>
+            <p>Risk and biological-age pairs</p>
           </div>
         </section>
-
-
       </main>
     </div>
   );
