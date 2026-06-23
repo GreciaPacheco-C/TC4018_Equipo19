@@ -1,0 +1,49 @@
+{
+    "disease_model_features": [
+        "gender",
+        "sample_type"
+    ],
+    "age_model_features": [
+        "gender",
+        "sample_type"
+    ],
+    "disease_target": "disease",
+    "age_target": "age",
+    "age_range_rules": [
+        {
+            "label": "under 30",
+            "min_age": 0,
+            "max_age": 29
+        },
+        {
+            "label": "30-45",
+            "min_age": 30,
+            "max_age": 45
+        },
+        {
+            "label": "46-60",
+            "min_age": 46,
+            "max_age": 60
+        },
+        {
+            "label": "61-75",
+            "min_age": 61,
+            "max_age": 75
+        },
+        {
+            "label": "70-90",
+            "min_age": 76,
+            "max_age": 90
+        },
+        {
+            "label": "over 90",
+            "min_age": 91,
+            "max_age": 200
+        }
+    ],
+    "risk_thresholds": {
+        "low": 0.4,
+        "medium": 0.7,
+        "higher": 1.0
+    }
+}

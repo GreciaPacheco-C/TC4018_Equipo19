@@ -1,0 +1,3 @@
+model,task,target,accuracy,precision_weighted,recall_weighted,f1_weighted,mae,r2,max_depth,random_state,n_rows,n_features,categorical_features,numeric_features
+DecisionTreeClassifier,disease_prediction,disease,0.8333333333333334,0.7956521739130435,0.8333333333333334,0.807789249188115,,,5,42,688,2,"gender, sample_type",
+DecisionTreeRegressor,age_prediction,age,,,,,17.21403909361192,0.11285886646291665,5,42,688,2,"gender, sample_type",

@@ -424,6 +424,121 @@
   color: #333;
   font-size: 18px;
 }
+.model-notice { padding: 12px 16px; border-left: 4px solid #d97706; border-radius: 6px; background: #fffbeb; color: #92400e !important; }
+.prediction-results { margin-top: 24px; }
+.prediction-grid { display: grid; gap: 16px; }
+.prediction-card { padding: 18px; border: 1px solid #e0e7ff; border-radius: 10px; }
+.prediction-card > span { color: #6b7280; font-size: 13px; }
+.prediction-metrics { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; margin-top: 12px; }
+.prediction-metrics strong { display: block; color: #667eea; font-size: 28px; }
+.prediction-metrics small { color: #6b7280; text-transform: capitalize; }
+
+.prediction-table {
+  overflow-x: auto;
+  width: 75%;
+  min-width: 760px;
+  margin: 0 auto;
+  border: 1px solid #dbe4ff;
+  border-radius: 14px;
+  background: white;
+  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.1);
+}
+
+.prediction-table .prediction-results-table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: white;
+  overflow: hidden;
+}
+
+.prediction-table .prediction-results-table thead {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.prediction-table .prediction-results-table th,
+.prediction-table .prediction-results-table td {
+  width: 20%;
+  min-width: 0;
+  padding: 18px 16px;
+  text-align: center;
+  border-right: 1px solid #e5ebff;
+  border-bottom: 1px solid #e5ebff;
+  vertical-align: middle;
+  overflow-wrap: anywhere;
+}
+
+.prediction-table .prediction-results-table th {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.prediction-table .prediction-results-table td {
+  color: #374151;
+  font-size: 14px;
+  font-weight: 600;
+  background: #ffffff;
+}
+
+.prediction-table .prediction-results-table th:last-child,
+.prediction-table .prediction-results-table td:last-child {
+  border-right: none;
+}
+
+.prediction-table .prediction-results-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.prediction-table .prediction-results-table tbody tr:hover td {
+  background: #f8faff;
+}
+
+.prediction-table .prediction-results-table .risk-cell-high {
+  background: #fff1f2;
+}
+
+.risk-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 96px;
+  border-radius: 999px;
+  padding: 8px 12px;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.risk-low {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.risk-medium {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.risk-high {
+  background: #dc2626;
+  color: #ffffff;
+  border: 1px solid #b91c1c;
+  box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.16);
+}
+
+@media (max-width: 1100px) {
+  .prediction-table {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .prediction-table .prediction-results-table {
+    min-width: 760px;
+  }
+}
 
 .preview-info {
   background: #f8f9fa;
